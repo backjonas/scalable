@@ -1,62 +1,61 @@
 import express, { Request, Response } from 'express';
-import { IFeedback, createFeedback, getAllFeedback, getFeedbackById, deleteFeedbackById, updateFeedback } from '../entity/Url';
+import { getAllUrls, createUrl, getUrl, deleteUrl, updateUrl } from '../entity/Url';
 
 const urlRouter = express.Router();
 
 urlRouter.get('/', async (req: Request, res: Response) => {
-  getAllFeedback()
-    .then(feedback => {
-      res.send({ feedback });
-    })
-    .catch(error => {
-      console.log(`Error retrieving feedback: ${error}`);
-      res.sendStatus(400);
-    });
+  try {
+    const urls = await getAllUrls();
+    res.send(urls);
+  }
+  catch (error) {
+    console.log(`Error retrieving urls: ${error}`);
+    res.sendStatus(400);
+  }
 });
 
 urlRouter.get('/:id', async (req: Request, res: Response) => {
-  getFeedbackById(req.params.id)
-    .then(feedback => {
-      res.send({ feedback });
-    })
-    .catch(error => {
-      console.log(`Error retrieving feedback with id ${req.params.id}: ${error}`);
-      res.sendStatus(400);
-    });
+  try {
+    const url = await getUrl(req.params.id);
+    res.redirect(url.longUrl);
+  }
+  catch (error) {
+    console.log(`Error retrieving url with short url ${req.params.id}: ${error}`);
+    res.sendStatus(400);
+  }
 });
 
 urlRouter.post('/', async (req: Request, res: Response) => {
   try {
-    const newFeedback = req.body as IFeedback;
-    await createFeedback(newFeedback);
-    res.sendStatus(201);
+    const longUrl = req.body.longUrl;
+    const url = await createUrl(longUrl);
+    res.status(201).send(url);
   } catch (error) {
-    console.log(`Error creating feedback: ${error}`);
+    console.log(`Error creating url: ${error}`);
     res.sendStatus(400);
   }
 });
 
 urlRouter.delete('/:id', async (req: Request, res: Response) => {
-  deleteFeedbackById(req.params.id)
-    .then(() => {
-      res.sendStatus(204);
-    })
-    .catch(error => {
-      console.log(`Error deleting feedback with id ${req.params.id}: ${error}`);
-      res.sendStatus(400);
-    });
+  try {
+    await deleteUrl(req.params.id);
+    res.sendStatus(204);
+  }
+  catch (error) {
+    console.log(`Error deleting url with short url ${req.params.id}: ${error}`);
+    res.sendStatus(400);
+  }
 });
 
 urlRouter.put('/:id', async (req: Request, res: Response) => {
-  const newFeedback = req.body as IFeedback;
-  updateFeedback(newFeedback, req.params.id)
-    .then(() => {
-      res.sendStatus(204);
-    })
-    .catch(error => {
-      console.log(`Error updating feedback with id ${req.params.id}: ${error}`);
-      res.sendStatus(400);
-    });
+  try {
+    const newUrl = updateUrl(req.body.longUrl, req.params.id);
+    res.status(204).send(newUrl);
+  }
+  catch (error) {
+    console.log(`Error updating url with short url ${req.params.id}: ${error}`);
+    res.sendStatus(400);
+  }
 });
 
 

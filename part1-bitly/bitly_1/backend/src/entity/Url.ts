@@ -1,4 +1,5 @@
 import { Entity, PrimaryColumn, Column, getRepository } from 'typeorm';
+import { nanoid } from 'nanoid';
 
 export interface IUrl {
   id: number;
@@ -10,39 +11,37 @@ export interface IUrl {
 export class Url {
 
   @PrimaryColumn()
-  shortUrl: string;
+    id: string;
 
   @Column()
-  longUrl: string;
+    longUrl: string;
 }
 
-export const createUrl = async (url: IUrl) => {
+export const createUrl = async (longUrl: string) => {
   const repo = getRepository(Url);
   const newUrl = new Url();
-  newUrl.shortUrl = url.shortUrl;
-  newUrl.longUrl = url.longUrl;
-
+  newUrl.longUrl = longUrl;
+  newUrl.id = nanoid(10);
   return await repo.save(newUrl);
 };
 
-// export const getAllFeedback = async () => {
-//   const repo = getRepository(Feedback);
-//   return await repo.find();
-// };
+export const getAllUrls = async () => {
+  const repo = getRepository(Url);
+  return await repo.find();
+};
 
 export const getUrl = async (shortUrl: string) => {
   const repo = getRepository(Url);
-  return await repo.findOneBy({ shortUrl: shortUrl});
+  return await repo.findOne(shortUrl);
 };
 
 export const deleteUrl = async (shortUrl: string) => {
   const repo = getRepository(Url);
-  return await repo.delete({ shortUrl: shortUrl});
+  return await repo.delete(shortUrl);
 };
 
-export const updateUrl = async (newUrl: IUrl) => {
+export const updateUrl = async (longUrl: string, shortUrl: string) => {
   const repo = getRepository(Url);
-  const oldUrl = await repo.findOne({ shortUrl: newUrl.shortUrl });
-  repo.merge(oldUrl, newUrl);
-  return await repo.save(oldUrl);
+  const oldUrl = await repo.findOne(shortUrl);
+  return await repo.save({ ...oldUrl, longUrl });
 };

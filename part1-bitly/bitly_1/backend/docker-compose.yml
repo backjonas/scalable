@@ -3,7 +3,7 @@ version: '3.5'
 services:
   app:
     build: .
-    container_name: feedbackapi
+    container_name: bitlyapi
     depends_on:
       - db
     # Remove port forwarding and add the app to your reverse proxy network
@@ -14,7 +14,7 @@ services:
       - db
 
   db:
-    container_name: feedback-db
+    container_name: bitly-db
     image: postgres:14-alpine
     environment:
       - POSTGRES_USER=${DB_USER}
@@ -24,6 +24,8 @@ services:
       - db
     volumes:
       - /var/lib/postgresql/data/:/data/db
+    ports:
+      - '5432:5432'
 
 volumes:
   db-data:

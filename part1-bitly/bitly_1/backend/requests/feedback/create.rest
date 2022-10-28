@@ -1,9 +1,6 @@
-POST http://localhost:5000/api/feedback
+POST http://localhost:5000/api/url
 Content-Type: application/json
 
 {
-  "name": "Some Name",
-  "text": "bad",
-  "grade": 32
-
+  "longUrl": "https://www.google.com/"
 }

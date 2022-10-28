@@ -1,9 +1,9 @@
 module.exports = {
   'type': 'postgres',
   'host': process.env.DB_HOST || 'localhost',
-  'username': process.env.DB_USER || 'feedbackapi',
-  'password': process.env.DB_PW || 'feedbackapi',
-  'database': process.env.DB_NAME || 'feedbackapi',
+  'username': process.env.DB_USER || 'bitly',
+  'password': process.env.DB_PW || 'bitly',
+  'database': process.env.DB_NAME || 'bitly',
   'synchronize': true,
   'logging': false,
   'entities': [

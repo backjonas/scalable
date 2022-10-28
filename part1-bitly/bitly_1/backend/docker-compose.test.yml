@@ -5,7 +5,7 @@ services:
     build:
       dockerfile: Dockerfile.test
       context: .
-    container_name: feedbackapi_test
+    container_name: bitlyapi_test
     depends_on:
       - db
     # Remove port forwarding and add the app to your reverse proxy network
@@ -16,7 +16,7 @@ services:
       - db
 
   db:
-    container_name: feedback-db
+    container_name: bitly-db
     image: postgres:14-alpine
     environment:
       - POSTGRES_USER=${DB_USER}
