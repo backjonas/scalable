@@ -1,0 +1,7 @@
+PUT http://localhost:5000/api/feedback/3
+Content-Type: application/json
+
+{
+  "name": "Some New Name",
+  "grade": 33
+}

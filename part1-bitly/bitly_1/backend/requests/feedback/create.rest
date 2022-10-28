@@ -1,0 +1,9 @@
+POST http://localhost:5000/api/feedback
+Content-Type: application/json
+
+{
+  "name": "Some Name",
+  "text": "bad",
+  "grade": 32
+
+}

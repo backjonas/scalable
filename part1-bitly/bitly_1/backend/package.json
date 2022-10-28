@@ -1,0 +1,38 @@
+{
+  "name": "backend_1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build-ts": "tsc --build tsconfig.json",
+    "start": "NODE_ENV=production node dist/index.js",
+    "deploy": "npm run build-ts && npm run start",
+    "dev": "NODE_ENV=development ts-node-dev src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/backjonas/scalable.git"
+  },
+  "author": "Jonas Bäck",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/backjonas/scalable/issues"
+  },
+  "homepage": "https://github.com/backjonas/scalable#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.1",
+    "@typescript-eslint/parser": "^5.12.1",
+    "eslint": "^8.9.0",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.13",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "pg": "^8.7.3",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.44"
+  }
+}
