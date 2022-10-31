@@ -3,7 +3,7 @@ import { getAllUrls, createUrl, getUrl, deleteUrl, updateUrl } from '../entity/U
 
 const urlRouter = express.Router();
 
-urlRouter.get('/', async (req: Request, res: Response) => {
+urlRouter.get('/all', async (req: Request, res: Response) => {
   try {
     const urls = await getAllUrls();
     res.send(urls);
@@ -27,9 +27,13 @@ urlRouter.get('/:id', async (req: Request, res: Response) => {
 
 urlRouter.post('/', async (req: Request, res: Response) => {
   try {
-    const longUrl = req.body.longUrl;
+    let longUrl = req.body.longUrl;
+    if (!longUrl.includes('http://') && !longUrl.includes('https://')) {
+      longUrl = `http://${longUrl}`;
+    }
     const url = await createUrl(longUrl);
-    res.status(201).send(url);
+    const shortUrl = `${req.protocol}://${req.get('host')}/${url.id}`;
+    res.status(201).send({ shortUrl, longUrl: url.longUrl });
   } catch (error) {
     console.log(`Error creating url: ${error}`);
     res.sendStatus(400);
