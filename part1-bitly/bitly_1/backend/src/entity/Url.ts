@@ -32,6 +32,11 @@ export const getAllUrls = async () => {
 
 export const getUrl = async (shortUrl: string) => {
   const repo = getRepository(Url);
+  if (shortUrl === 'random') {
+    return await repo.createQueryBuilder('url')
+      .orderBy('RANDOM()')
+      .getOne();
+  }
   return await repo.findOne(shortUrl);
 };
 

@@ -5,6 +5,7 @@ const urlRouter = express.Router();
 
 urlRouter.get('/all', async (req: Request, res: Response) => {
   try {
+    console.log(process.env.NODE_ENV)
     const urls = await getAllUrls();
     res.send(urls);
   }
@@ -17,7 +18,11 @@ urlRouter.get('/all', async (req: Request, res: Response) => {
 urlRouter.get('/:id', async (req: Request, res: Response) => {
   try {
     const url = await getUrl(req.params.id);
-    res.redirect(url.longUrl);
+    if (url) {
+      res.redirect(url.longUrl);
+    } else {
+      res.sendStatus(404);
+    }
   }
   catch (error) {
     console.log(`Error retrieving url with short url ${req.params.id}: ${error}`);
