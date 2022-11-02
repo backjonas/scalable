@@ -1,0 +1,40 @@
+version: '3.5'
+
+services:
+  app:
+    build: .
+    environment:
+      - DB_HOST=${DB_HOST:-bitly-db}
+      - DB_USER=${DB_USER:-bitly}
+      - DB_PW=${DB_PW:-bitly}
+      - DB_NAME=${DB_NAME:-bitly}
+      - PORT=${APP_PORT:-5000}
+    container_name: bitlyapi
+    depends_on:
+      - db
+    ports:
+      - '5000:5000'
+    networks:
+      - db
+
+  db:
+    container_name: bitly-db
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=${DB_USER:-bitly}
+      - POSTGRES_PASSWORD=${DB_PW:-bitly}      
+      - POSTGRES_DB=${DB_NAME:-bitly}
+    networks:
+      - db
+    volumes:
+      - /var/lib/postgresql/data/:/data/db
+    ports:
+      - '5432:5432'
+
+volumes:
+  db-data:
+    driver: local
+
+networks:
+  db:
+    driver: bridge

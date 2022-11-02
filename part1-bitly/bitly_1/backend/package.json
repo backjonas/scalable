@@ -11,16 +11,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:ui": "rm -rf build && cd ../frontend/ && npm install && npm run build && cp -r build ../backend"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/backjonas/scalable.git"
-  },
   "author": "Jonas Bäck",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/backjonas/scalable/issues"
-  },
-  "homepage": "https://github.com/backjonas/scalable#readme",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
