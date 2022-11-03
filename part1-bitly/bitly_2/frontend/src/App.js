@@ -6,6 +6,7 @@ const App = () => {
   return (
     <div>
       <h2>Bitly clone</h2>
+      <p>Enter the URL you want to shorten</p>
       <UrlForm />
       <Notification />
     </div>
