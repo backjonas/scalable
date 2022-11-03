@@ -1,9 +1,6 @@
 .vscode/
 **/node_modules/
-**/build/
 tmp/
 temp/
-**/.env
 **/dist
-venv
 __pycache__

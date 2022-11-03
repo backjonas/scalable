@@ -1,5 +1,5 @@
-# Bitly clone v2
-Simple bitly clone written with React, Fastify and Postgresql
+# Bitly clone v3
+Simple bitly clone written with React, Flask and Postgresql
 
 A main page is found at `/`
 
