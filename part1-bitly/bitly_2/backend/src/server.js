@@ -1,5 +1,5 @@
 require('dotenv').config();
-const fastify = require('fastify')({ logger: true });
+const fastify = require('fastify')({ logger: { level: 'error'} });
 const fastifyStatic = require('@fastify/static');
 const path = require('path');
 const urlRoutes = require('./routes');

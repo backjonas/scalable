@@ -4,6 +4,7 @@ from sqlalchemy.sql.expression import func
 import os
 import random
 import string
+import logging
 
 
 app = Flask(__name__, static_folder='build')
@@ -15,6 +16,9 @@ db_name = os.environ.get('DB_NAME', 'bitly')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_password}@{db_host}/{db_name}'
 
 db = SQLAlchemy(app)
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 class Url(db.Model):
   id = db.Column(db.String(10), primary_key=True)
