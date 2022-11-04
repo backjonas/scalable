@@ -16,8 +16,8 @@ fastify.register(urlRoutes);
 
 const start = async () => {
   const PORT = process.env.PORT || 5000;
-  fastify.listen({ port: PORT }, function (err, address) {
-    if (err) fastify.log.error(err);
+  fastify.listen(PORT, '0.0.0.0', error => {
+    if (error) fastify.log.error(error);
     console.log(`Server is now listening on port ${PORT}`);
   });
 };
