@@ -4,3 +4,4 @@ tmp/
 temp/
 **/dist
 __pycache__
+**/build/

@@ -1,5 +1,0 @@
-GET http://localhost:5000/api/feedback HTTP/1.1
-
-###
-
-GET http://localhost:5000/api/feedback/3 HTTP/1.1

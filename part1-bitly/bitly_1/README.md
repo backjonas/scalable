@@ -14,7 +14,7 @@ New short URLs can be created with the main page or by sending a POST to `/` wit
 ## File structure
 The source code for the application can be found in the `backend` and `frontend` directories.
 
-As all bitly clones share the same frontend, to save some time for the tester, prebuilt static files for the frontend can be found in the `build` directory in each bitly backend. The frontend can be rebuilt with `npm run build`.
+All 3 bitly clones share the same simple React frontend.
 
 ### Prerequisites
 ```

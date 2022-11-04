@@ -7,3 +7,4 @@ temp/
 **/dist
 venv
 __pycache__
+package-lock.json

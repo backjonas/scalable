@@ -70,12 +70,16 @@ Technologies used: Flask, SQLAlchemy, Postgres (and React)
 As all 3 applications use the same database (Postgres) and frontend (React), the only measured differences should originate from the API libraries and how they interface with the database. 
 The 3 applications have very clear performance differences, with Fastify being the fastest by a large margin.
 The Express application is close to Fastify when serving the mainpage, but in all other cases Fastify is between 2 and *25* times faster than the other applications.
-The Express based application is faster than the Flask based one in general, but the /random functionality of the Express app is extremely slow. 
-This is quite surprising, as all the applications *should* be using the same logic for the random function (sort all objects by random -> pick first object). 
+As the difference between the two libraries comes only when accessing the database, it seems like the performance difference between the API functions of Fastify and Express are negligible, while Fastifys postgres functions greatly outperform those from TypeORM.
+
+The Flask based application is the slowest one overall, with the exception that it beats out Express in the /random functionality, as that is extremelt slow in the Express app.
+This is quite surprising, as all the applications *should* be using the same logic for the random function (sort all objects by random -> pick first object).
 Clearly something is off with TypeORMs implementation as it takes ~25x longer than the version used by Fastify.
 
-The large performance differences between the applications were surprising, as they all use the same database and serve the same frontend files.
-With this simple testing it is unclear how well these differences correlate with real-world performance, as it is likely that caching (or something else the libraries do under the hood) impacts the performance when repeatedly fetching the same static files or repeatedly fetching the same URL.
+The reason for Flask being so much slower than the other apps is unclear, but some likely culprits are python instead of javascript, as well as using very different database libraries.
+Additionally, Flask should be run with a WSGI server such as Gunicorn in front of the application, something this application does not do.
+Running the Flask app correctly would allow for some level of multiprocessing (among other things), which should improve the performance.
+
 
 ### Future performance improvements
 To improve the performance of the applications, three clear pain points stick out.
@@ -85,4 +89,6 @@ Secondly, the frontend is written in React, which makes the static files reach a
 Some smarter library choices (or just using plain html) could probably cut down this size by a factor of 1000.
 And finally, the Postgres database is very slow, as it has to write each operation directly to disk.
 This speed of the database operations could be improved greatly by using an in-memory database (such as REDIS) as a cache between the Postgres database and the application.
-And clearly Flask (or SQLAlchemy, whichever is the bottleneck) should just be avoided completely if performance is a priority
+
+For the Flask application, the app should naturally be run correctly with a WSGI server instead of just using the development server it uses now.
+If the results stay close to the current ones even with a WSGI server, it seems that Flask (or SQLAlchemy, whichever is the bottleneck) should just be avoided completely if performance is a priority
