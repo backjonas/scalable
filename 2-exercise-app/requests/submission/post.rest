@@ -1,0 +1,8 @@
+POST http://localhost:5000/api/submission
+Content-Type: application/json
+
+{
+  "user": "id123",
+  "exerciseId": 1,
+  "completed": false
+}

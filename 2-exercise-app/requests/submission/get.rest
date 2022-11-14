@@ -1,0 +1,5 @@
+GET http://localhost:5000/api/submission
+
+###
+
+GET http://localhost:5000/api/submission/1

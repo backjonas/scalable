@@ -1,0 +1,7 @@
+POST http://localhost:5000/api/exercise
+Content-Type: application/json
+
+{
+  "name": "name123",
+  "description": "description123"
+}
