@@ -3,6 +3,6 @@ Content-Type: application/json
 
 {
   "user": "id123",
-  "exerciseId": 1,
-  "completed": false
+  "exerciseId": 2,
+  "submittedCode": "abc123CUM"
 }

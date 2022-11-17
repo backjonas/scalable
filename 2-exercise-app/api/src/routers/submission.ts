@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { getAllSubmissions, getSubmission, createSubmission, deleteSubmission, ISubmission } from '../entity/Submission';
+import { grade } from '../grader/grade';
 
 const submissionRouter = express.Router();
 
@@ -31,7 +32,15 @@ submissionRouter.get('/:id', async (req: Request, res: Response) => {
 
 submissionRouter.post('/', async (req: Request, res: Response) => {
   try {
-    const newSubmission = req.body as ISubmission;
+    const submittedCode = req.body.submittedCode;
+    const result = await grade(submittedCode);
+    const completed = result === 'PASS';
+    const newSubmission = {
+      user: req.body.user,
+      exerciseId: req.body.exerciseId,
+      completed
+    } as ISubmission;
+
     const submission = await createSubmission(newSubmission);
     res.status(201).send({ submission });
   } catch (error) {

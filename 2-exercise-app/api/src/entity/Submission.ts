@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, getRepository, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, getRepository, ManyToOne, JoinColumn } from 'typeorm';
 import { Exercise, getExercise } from './Exercise';
 
 export interface ISubmission {
@@ -16,7 +16,7 @@ export class Submission {
   @Column()
     user: string;
 
-  @OneToOne(type => Exercise) @JoinColumn()
+  @ManyToOne(type => Exercise) @JoinColumn()
     exercise: Exercise;
 
   @Column()
