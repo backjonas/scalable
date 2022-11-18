@@ -40,7 +40,6 @@ submissionRouter.post('/', async (req: Request, res: Response) => {
       exerciseId: req.body.exerciseId,
       completed
     } as ISubmission;
-
     const submission = await createSubmission(newSubmission);
     res.status(201).send({ submission });
   } catch (error) {
