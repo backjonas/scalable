@@ -6,20 +6,18 @@ const axiosInstance = axios.create({
   timeout: 10000
 })
 
-// const createNew = async (submittedCode, user, exerciseId) => {
-//   const object = { submittedCode, user, exerciseId }
-//   const response = await axiosInstance.post('', object)
-//   return response.data
-// }
-
 const getAll = async () => {
   const response = await axiosInstance.get('/')
   return response.data
 }
 
+const getById = async (id) => {
+  const response = await axiosInstance.get(`/${id}`)
+  return response.data
+}
 const exportedFunctions = {
-  // createNew,
-  getAll
+  getAll,
+  getById
 }
 
 export default exportedFunctions

@@ -1,12 +1,12 @@
 import express, { Request, Response } from 'express';
-import { getAllSubmissions, getSubmission, createSubmission, deleteSubmission, ISubmission } from '../entity/Submission';
+import { getAllSubmissions, getSubmission, createSubmission, deleteSubmission, ISubmission, getSubmissionsByUser, getSubmissionsByUserAndExercise } from '../entity/Submission';
 import { grade } from '../grader/grade';
 
 const submissionRouter = express.Router();
 
 submissionRouter.get('/', async (req: Request, res: Response) => {
   try {
-    const submissions = await getAllSubmissions();
+    const submissions = await getSubmissionsByUser(req.get('authorization'));
     res.send(submissions);
   }
   catch (error) {
@@ -30,13 +30,24 @@ submissionRouter.get('/:id', async (req: Request, res: Response) => {
   }
 });
 
+submissionRouter.get('/exercise/:id', async (req: Request, res: Response) => {
+  try {
+    const submissions = await getSubmissionsByUserAndExercise(req.get('authorization'), req.params.id);
+    res.send(submissions);
+  }
+  catch (error) {
+    console.log(`Error retrieving submissions: ${error}`);
+    res.sendStatus(400);
+  }
+});
+
 submissionRouter.post('/', async (req: Request, res: Response) => {
   try {
     const submittedCode = req.body.submittedCode;
     const result = await grade(submittedCode);
     const completed = result === 'PASS';
     const newSubmission = {
-      user: req.body.user,
+      user: req.get('authorization'),
       exerciseId: req.body.exerciseId,
       completed
     } as ISubmission;

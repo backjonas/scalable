@@ -16,7 +16,11 @@ export class Submission {
   @Column()
     user: string;
 
-  @ManyToOne(type => Exercise) @JoinColumn()
+  @Column()
+    exerciseId: string;
+
+  @ManyToOne(() => Exercise)
+  @JoinColumn({ name: 'exerciseId' })
     exercise: Exercise;
 
   @Column()
@@ -36,6 +40,21 @@ export const createSubmission = async (submission: ISubmission) => {
 export const getAllSubmissions = async () => {
   const repo = getRepository(Submission);
   return await repo.find();
+};
+
+export const getSubmissionsByUser = async (userId: string) => {
+  const repo = getRepository(Submission);
+  return await repo.find({ where: { user: userId } });
+};
+
+export const getSubmissionsByUserAndExercise = async (userId: string, exerciseId: string) => {
+  const repo = getRepository(Submission);
+  return await repo.find({
+    where: {
+      user: userId,
+      exerciseId: exerciseId
+    }
+  });
 };
 
 export const getSubmission = async (id: string) => {

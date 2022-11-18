@@ -1,8 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit"
 import exerciseService from '../services/exercises'
+import submissionService from '../services/submissions'
 // import { setNotification } from './notificationReducer'
 
-const initialState = []
+const initialState = {
+  completedExercises: [],
+  incompleteExercises: [],
+  currentExercise: {}
+}
 
 const exerciseSlice = createSlice({
   name: 'exercises',
@@ -19,25 +24,37 @@ const exerciseSlice = createSlice({
 
 export const { setExercises, appendExercise } = exerciseSlice.actions
 
-export const initializeExercises = () => {
+export const initializeAllExercises = () => {
   return async dispatch => {
-    const exercises = await exerciseService.getAll()
-    dispatch(setExercises(exercises))
+    const user = window.localStorage.getItem('exerciseUser')
+    const submissions = await submissionService.getAll(user);
+    const exercises = await exerciseService.getAll();
+
+    const completedExercises = []
+    const incompleteExercises = []
+    exercises.forEach(exercise => {
+      const acceptedSubmission = submissions.find(submission => {
+        return submission.exerciseId === exercise.id && submission.completed
+      })
+      if (acceptedSubmission) {
+        completedExercises.push(exercise)
+      } else {
+        incompleteExercises.push(exercise)
+      }
+    })
+    dispatch(setExercises({ completedExercises, incompleteExercises }))
   }
 }
 
-// export const createSubmission = (submittedCode, user, exerciseId) => {
-//   return async dispatch => {
-//     try {
-//       const createdSubmission = await exerciseService.createNew(submittedCode, user, exerciseId)
-//       console.log(createdSubmission)
-//       console.log('BBBBB')
-//     } catch (error) {
-//       console.log(`Error creating submission: ${error}`)
-//     }
-//     // dispatch(setSubmission(newUrl))
-//     // dispatch(setNotification(newUrl))
-//   }
-// }
+export const initializeOneExercise = (exerciseId) => {
+  return async dispatch => {
+    const user = window.localStorage.getItem('exerciseUser')
+    const exercise = await exerciseService.getById(exerciseId)
+    const submissions = await submissionService.getByExerciseId(exerciseId)
+    console.log(user)
+    console.log(exercise)
+    console.log(submissions)
+  }
+}
 
 export default exerciseSlice.reducer
