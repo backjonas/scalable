@@ -17,7 +17,22 @@ const connect = async () => {
     channel = await connection.createChannel();
 
     // make sure that the order channel is created, if not this statement will create it
-    await channel.assertQueue('order');
+    await channel.assertQueue('gradingResponse');
+    await channel.consume('gradingRequest', (data) => {
+      const receivedData = JSON.parse(data.content);
+      console.log(receivedData);
+      console.log(`Received ${Buffer.from(data.content)}`);
+      channel.ack(data);
+      channel.sendToQueue(
+        'gradingResponse',
+        Buffer.from(
+          JSON.stringify(
+            { ...receivedData, grade: true },
+          ),
+        ),
+      );
+    });
+
   } catch (error) {
     console.log(error);
   }
@@ -30,7 +45,7 @@ app.post('/orders', (req, res) => {
 
   // send a message to all the services connected to 'order' queue, add the date to differentiate between them
   channel.sendToQueue(
-    'order',
+    'gradingResponse',
     Buffer.from(
       JSON.stringify({
         ...data,

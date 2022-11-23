@@ -1,13 +1,18 @@
 import express, { Request, Response } from 'express';
 import { getAllSubmissions, getSubmission, createSubmission, deleteSubmission, ISubmission, getSubmissionsByUser, getSubmissionsByUserAndExercise } from '../entity/Submission';
-import { grade } from '../grader/grade';
+import rabbitMQ from '../rabbitmq/connection';
 
 const submissionRouter = express.Router();
 
 submissionRouter.get('/', async (req: Request, res: Response) => {
   try {
-    const submissions = await getSubmissionsByUser(req.get('authorization'));
-    res.send(submissions);
+    const userToken = req.get('authorization');
+    if (userToken && userToken.toLowerCase().startsWith('bearer ')) {
+      const submissions = await getSubmissionsByUser(userToken.substring(7));
+      res.send(submissions);
+    } else {
+      res.sendStatus(403);
+    }
   }
   catch (error) {
     console.log(`Error retrieving submissions: ${error}`);
@@ -32,8 +37,13 @@ submissionRouter.get('/:id', async (req: Request, res: Response) => {
 
 submissionRouter.get('/exercise/:id', async (req: Request, res: Response) => {
   try {
-    const submissions = await getSubmissionsByUserAndExercise(req.get('authorization'), req.params.id);
-    res.send(submissions);
+    const userToken = req.get('authorization');
+    if (userToken && userToken.toLowerCase().startsWith('bearer ')) {
+      const submissions = await getSubmissionsByUserAndExercise(userToken.substring(7), req.params.id);
+      res.send(submissions);
+    } else {
+      res.sendStatus(403);
+    }
   }
   catch (error) {
     console.log(`Error retrieving submissions: ${error}`);
@@ -43,16 +53,14 @@ submissionRouter.get('/exercise/:id', async (req: Request, res: Response) => {
 
 submissionRouter.post('/', async (req: Request, res: Response) => {
   try {
-    const submittedCode = req.body.submittedCode;
-    const result = await grade(submittedCode);
-    const completed = result === 'PASS';
-    const newSubmission = {
-      user: req.get('authorization'),
-      exerciseId: req.body.exerciseId,
-      completed
-    } as ISubmission;
-    const submission = await createSubmission(newSubmission);
-    res.status(201).send({ submission });
+    const userToken = req.get('authorization');
+    if (userToken && userToken.toLowerCase().startsWith('bearer ')) {
+      rabbitMQ.send({ ...req.body, user: userToken.substring(7) });
+      res.status(200).send('Submission received');
+    } else {
+      res.sendStatus(403);
+    }
+    console.log({ ...req.body, user: req.get('authorization') });
   } catch (error) {
     console.log(`Error creating submission: ${error}`);
     res.sendStatus(400);

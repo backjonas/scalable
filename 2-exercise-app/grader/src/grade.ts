@@ -81,11 +81,10 @@ const runGradingContainer = async (graderContainerName, randomKey) => {
 };
 
 const grade = async (code) => {
-  return 'PASS';
-  // const randomKey = Math.floor(Math.random() * 900000000 + 100000000);
-  // const graderContainerName = await createGradingContainer(code, randomKey);
-  // const result = await runGradingContainer(graderContainerName, randomKey);
-  // return result;
+  const randomKey = Math.floor(Math.random() * 900000000 + 100000000);
+  const graderContainerName = await createGradingContainer(code, randomKey);
+  const result = await runGradingContainer(graderContainerName, randomKey);
+  return result;
 };
 
 export { grade };

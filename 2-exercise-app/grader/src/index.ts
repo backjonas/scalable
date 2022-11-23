@@ -1,14 +1,17 @@
 import 'dotenv/config';
 import http from 'http';
-import app from './app';
-import { createConnection } from 'typeorm';
-import rabbitMQ from './rabbitmq/connection';
+import rabbitMQ from './rabbitmq';
+import express from 'express';
 
 
 const startServer = async () => {
-  const PORT = process.env.API_PORT || 5000;
+  const app = express();
+  app.use((request, response) => {
+    response.sendStatus(404);
+  });
+  
+  const PORT = process.env.API_PORT || 9001;
   try {
-    await createConnection();
     await rabbitMQ.connect();
     await rabbitMQ.listen();
     const server = http.createServer(app);
