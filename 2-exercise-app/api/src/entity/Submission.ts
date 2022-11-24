@@ -33,6 +33,10 @@ export const createSubmission = async (submission: ISubmission) => {
   const newSubmission = new Submission();
   newSubmission.user = submission.user;
   newSubmission.exercise = await getExercise(submission.exerciseId);
+  if (!newSubmission.exercise) {
+    console.log(`Exercise with id ${submission.exerciseId} does not exist`)
+    return;
+  }
   newSubmission.completed = submission.completed;
   return await repo.save(newSubmission);
 };
