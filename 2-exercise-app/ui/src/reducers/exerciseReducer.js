@@ -16,18 +16,17 @@ const exerciseSlice = createSlice({
     setExercises(state, action) {
       return action.payload
     },
-    appendExercise(state, action) {
-      state.push(action.payload)
+    setCurrentExercise(state, action) {
+      return { ...state, currentExercise: action.payload }
     }
   }
 })
 
-export const { setExercises, appendExercise } = exerciseSlice.actions
+export const { setExercises, setCurrentExercise } = exerciseSlice.actions
 
 export const initializeAllExercises = () => {
   return async dispatch => {
-    const user = window.localStorage.getItem('exerciseUser')
-    const submissions = await submissionService.getAll(user);
+    const submissions = await submissionService.getAll();
     const exercises = await exerciseService.getAll();
 
     const completedExercises = []
@@ -48,12 +47,11 @@ export const initializeAllExercises = () => {
 
 export const initializeOneExercise = (exerciseId) => {
   return async dispatch => {
-    const user = window.localStorage.getItem('exerciseUser')
     const exercise = await exerciseService.getById(exerciseId)
     const submissions = await submissionService.getByExerciseId(exerciseId)
-    console.log(user)
-    console.log(exercise)
-    console.log(submissions)
+    const acceptedSubmission = submissions.find(submission => submission.completed)
+    const completed = acceptedSubmission ? true : false
+    dispatch(setCurrentExercise({ ...exercise, completed }))
   }
 }
 

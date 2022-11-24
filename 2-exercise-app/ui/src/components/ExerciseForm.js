@@ -11,7 +11,6 @@ const ExerciseForm = ({ id }) => {
       } catch (error) {
         console.log(`Error creating submission: ${error}`)
       }
-      // dispatch(setSubmission(newUrl))
       // dispatch(setNotification(newUrl))
     }
   }
@@ -26,8 +25,8 @@ const ExerciseForm = ({ id }) => {
 
   return (
     <form onSubmit={submitExercise}>
-      <div><input name="submission" /></div>
-      <button type="submit">create</button>
+      <div><textarea name="submission" rows="10" cols="50"/></div>
+      <button type="submit">submit</button>
     </form>
   )
 }
