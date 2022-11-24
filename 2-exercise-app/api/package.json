@@ -9,7 +9,7 @@
     "deploy": "npm run build-ts && npm run start",
     "dev": "NODE_ENV=development ts-node-dev src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:ui": "rm -rf build && cd ../frontend/ && npm install && npm run build && cp -r build ../backend"
+    "build:ui": "rm -rf build && cd ../ui/ && npm install && npm run build && cp -r build ../api"
   },
   "author": "",
   "license": "ISC",
