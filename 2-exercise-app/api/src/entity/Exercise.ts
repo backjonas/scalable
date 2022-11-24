@@ -37,13 +37,18 @@ export const getExercise = async (id: string) => {
   return await repo.findOne(id);
 };
 
+export const getExerciseByContent = async (exercise: IExercise) => {
+  const repo = getRepository(Exercise);
+  return await repo.find({
+    where: {
+      name: exercise.name,
+      description: exercise.description
+    }
+  });
+};
+
 export const deleteExercise = async (id: string) => {
   const repo = getRepository(Exercise);
   return await repo.delete(id);
 };
 
-// export const updateExercise = async (id: string, exercise: IExercise) => {
-//   const repo = getRepository(Exercise);
-//   const oldExercise = await repo.findOne(id);
-//   return await repo.save({ ...oldExercise, exercise });
-// };

@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { getAllSubmissions, getSubmission, createSubmission, deleteSubmission, ISubmission, getSubmissionsByUser, getSubmissionsByUserAndExercise } from '../entity/Submission';
-import rabbitMQ from '../rabbitmq/connection';
+import rabbitMQ from '../utils/rabbitmq';
 
 const submissionRouter = express.Router();
 
@@ -77,17 +77,6 @@ submissionRouter.delete('/:id', async (req: Request, res: Response) => {
     res.sendStatus(400);
   }
 });
-
-// submissionRouter.put('/:id', async (req: Request, res: Response) => {
-//   try {
-//     const newUrl = updateUrl(req.body.longUrl, req.params.id);
-//     res.status(204).send(newUrl);
-//   }
-//   catch (error) {
-//     console.log(`Error updating url with short url ${req.params.id}: ${error}`);
-//     res.sendStatus(400);
-//   }
-// });
 
 
 export default submissionRouter;
