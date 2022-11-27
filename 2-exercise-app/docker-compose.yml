@@ -13,8 +13,8 @@ services:
       - GRADER_PORT=${GRADER_PORT:-9001}
       - RABBITMQ_PORT=${RABBITMQ_PORT:-5672}
       - RABBITMQ_HOST=${RABBITMQ_HOST:-exercise_rabbitmq}
-      - RABBITMQ_USER=${RABBITMQ_USER:-guest}
-      - RABBITMQ_PW=${RABBITMQ_PW:-guest}
+      - RABBITMQ_USER=${RABBITMQ_USER:-exercise}
+      - RABBITMQ_PW=${RABBITMQ_PW:-exercise}
     container_name: exercise_api
     depends_on:
       - grader
@@ -38,8 +38,8 @@ services:
       - GRADER_PORT=${GRADER_PORT:-9001}
       - RABBITMQ_PORT=${RABBITMQ_PORT:-5672}
       - RABBITMQ_HOST=${RABBITMQ_HOST:-exercise_rabbitmq}
-      - RABBITMQ_USER=${RABBITMQ_USER:-guest}
-      - RABBITMQ_PW=${RABBITMQ_PW:-guest}
+      - RABBITMQ_USER=${RABBITMQ_USER:-exercise}
+      - RABBITMQ_PW=${RABBITMQ_PW:-exercise}
     container_name: exercise_grader
     depends_on:
       rabbitmq:
@@ -54,6 +54,9 @@ services:
   rabbitmq:
     container_name: exercise_rabbitmq
     build: ./rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-exercise}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PW:-exercise}
     networks:
       - rabbitmq
     ports:

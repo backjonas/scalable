@@ -12,6 +12,7 @@ const startServer = async () => {
 
   const PORT = process.env.GRADER_PORT || 9001;
   try {
+    await buildGradingContainer();
     await rabbitMQ.connect();
     await rabbitMQ.listen();
     const server = http.createServer(app);

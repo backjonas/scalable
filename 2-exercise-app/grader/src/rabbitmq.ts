@@ -6,9 +6,10 @@ let channel: Channel, connection: Connection;
 // connect to rabbitmq
 const connect = async () => {
   try {
-    // rabbitmq default port is 5672
-    const amqpServer = 'amqp://rabbitmq:5672';
-    connection = await amqplib.connect(amqpServer, 'heartbeat=60');
+    const RABBITMQ_USER = process.env.RABBITMQ_USER || 'guest';
+    const RABBITMQ_PW = process.env.RABBITMQ_PW || 'guest';
+    const amqpServer = `amqp://${RABBITMQ_USER}:${RABBITMQ_PW}@rabbitmq:5672`;
+    connection = await amqplib.connect(amqpServer);
     channel = await connection.createChannel();
     await channel.assertQueue('gradingResponse');
     await channel.assertQueue('gradingRequest');
