@@ -1,5 +1,8 @@
 import amqplib, { Channel, Connection } from 'amqplib';
+
 import { createSubmission } from '../entity/Submission';
+import wss from './websocket';
+
 let channel: Channel, connection: Connection;
 
 // connect to rabbitmq
@@ -25,6 +28,11 @@ const listen = async () => {
       const result = await createSubmission(receivedData);
       console.log(result);
       channel.ack(data!);
+      wss.clients.forEach((client) => {
+        console.log('client');
+        console.log(client.user);
+        client.send(JSON.stringify(result));
+      });
     });
   } catch (error) {
     console.log(error);

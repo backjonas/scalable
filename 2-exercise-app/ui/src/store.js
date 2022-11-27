@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import notificationReducer from './reducers/notificationReducer'
+import gradingResultReducer from './reducers/gradingResultReducer'
 import exerciseReducer from './reducers/exerciseReducer'
 
 export const store = configureStore({
   reducer: {
-    notification: notificationReducer,
+    gradingResult: gradingResultReducer,
     exercises: exerciseReducer
   }
 })

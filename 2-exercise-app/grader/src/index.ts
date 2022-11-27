@@ -9,8 +9,8 @@ const startServer = async () => {
   app.use((request, response) => {
     response.sendStatus(404);
   });
-  
-  const PORT = process.env.API_PORT || 9001;
+
+  const PORT = process.env.GRADER_PORT || 9001;
   try {
     await rabbitMQ.connect();
     await rabbitMQ.listen();

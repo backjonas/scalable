@@ -1,13 +1,13 @@
-import Mainpage from './views/Mainpage';
-import Exercise from './views/Exercise';
-import submissionService from './services/submissions'
-
 import { nanoid } from 'nanoid';
 import {
   BrowserRouter as Router,
   Routes,
   Route
 } from "react-router-dom";
+
+import Mainpage from './views/Mainpage';
+import Exercise from './views/Exercise';
+import submissionService from './services/submissions'
 
 
 const App = () => {
@@ -16,7 +16,7 @@ const App = () => {
     if (!token) {
       token = nanoid(64);
       window.localStorage.setItem(
-        'exerciseUser', JSON.stringify(token)
+        'exerciseUser', token
       )
     }
     submissionService.setToken(token)

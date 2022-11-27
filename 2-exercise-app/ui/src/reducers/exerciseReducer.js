@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import exerciseService from '../services/exercises'
 import submissionService from '../services/submissions'
-// import { setNotification } from './notificationReducer'
 
 const initialState = {
   completedExercises: [],
@@ -50,8 +49,9 @@ export const initializeOneExercise = (exerciseId) => {
     const exercise = await exerciseService.getById(exerciseId)
     const submissions = await submissionService.getByExerciseId(exerciseId)
     const acceptedSubmission = submissions.find(submission => submission.completed)
+    const numSubmissions = submissions.length;
     const completed = acceptedSubmission ? true : false
-    dispatch(setCurrentExercise({ ...exercise, completed }))
+    dispatch(setCurrentExercise({ ...exercise, completed , numSubmissions}))
   }
 }
 

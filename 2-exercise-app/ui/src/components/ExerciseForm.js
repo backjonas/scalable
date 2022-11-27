@@ -1,17 +1,16 @@
 import { useDispatch } from 'react-redux'
 import submissionService from '../services/submissions'
-
+import { setGradingResult } from '../reducers/gradingResultReducer'
 
 const ExerciseForm = ({ id }) => {
   const createSubmission = (submittedCode, user, exerciseId) => {
     return async dispatch => {
       try {
-        const createdSubmission = await submissionService.createNew(submittedCode, user, exerciseId)
-        console.log(createdSubmission)
+        await submissionService.createNew(submittedCode, user, exerciseId)
+        dispatch(setGradingResult('Your solution has been submitted. The result will be visible on this page. This might take some time.'))
       } catch (error) {
         console.log(`Error creating submission: ${error}`)
       }
-      // dispatch(setNotification(newUrl))
     }
   }
   

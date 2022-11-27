@@ -1,9 +1,10 @@
-import ExerciseForm from '../components/ExerciseForm';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { initializeOneExercise } from '../reducers/exerciseReducer'; 
+import ExerciseForm from '../components/ExerciseForm';
+import GradingResult from '../components/GradingResult';
 
 const Exercise = () => {
   const exerciseId = useParams().id;
@@ -29,14 +30,18 @@ const Exercise = () => {
       : 'You have not completed this exercise'
     }
     </div>
+    <div>
+    {`You have submitted this exercise ${exercise.numSubmissions} times`}
+    </div>
     <p/>
     <div>{exercise.description}</div>
     <p/>
     <p/>
     <div>
-      Write your solution in the box below
+      Write your solution below
     </div>
     <ExerciseForm id={exerciseId}/>
+    <GradingResult exerciseId={exerciseId}/>
     </>
   )
 }
