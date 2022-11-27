@@ -1,5 +1,6 @@
 FROM docker:dind
 
+RUN apk update
 RUN apk add npm
 # RUN service docker start
 # RUN service docker status 
@@ -14,4 +15,8 @@ RUN npm run build-ts
 EXPOSE 9001
 
 # Sleep to wait for docker to start
-CMD dockerd-entrypoint.sh </dev/null &>/dev/null & sleep 5 && npm start
+ENTRYPOINT dockerd-entrypoint.sh & sleep 5 && exec npm start
+
+# ENTRYPOINT ["dockerd-entrypoint.sh", "&"] 
+# CMD ["sleep", "5", "&&", "exec", "npm", "start"]
+# CMD dockerd-entrypoint.sh </dev/null &>/dev/null & sleep 5 && npm star

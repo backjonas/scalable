@@ -1,6 +1,30 @@
 version: '3.5'
 
 services:
+  api:
+    build: .
+    restart: always
+    environment:
+      - DB_HOST=${DB_HOST:-exercise_db}
+      - DB_USER=${DB_USER:-exercise}
+      - DB_PW=${DB_PW:-exercise}
+      - DB_NAME=${DB_NAME:-exercise}
+      - API_PORT=${API_PORT:-5000}
+      - GRADER_PORT=${GRADER_PORT:-9001}
+      - RABBITMQ_PORT=${RABBITMQ_PORT:-5672}
+      - RABBITMQ_HOST=${RABBITMQ_HOST:-exercise_rabbitmq}
+      - RABBITMQ_USER=${RABBITMQ_USER:-guest}
+      - RABBITMQ_PW=${RABBITMQ_PW:-guest}
+    container_name: exercise_api
+    depends_on:
+      - grader
+    ports:
+      - '5000:5000'
+    networks:
+      - db
+      - rabbitmq
+      - grading
+
   grader:
     build: ./grader
     restart: always
@@ -18,8 +42,8 @@ services:
       - RABBITMQ_PW=${RABBITMQ_PW:-guest}
     container_name: exercise_grader
     depends_on:
-      - db
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     ports:
       - '9001:9001'
     networks:
@@ -27,31 +51,21 @@ services:
       - rabbitmq
       - grading
 
-  api:
-    build: .
-    restart: always
-    environment:
-      - DB_HOST=${DB_HOST:-exercise_db}
-      - DB_USER=${DB_USER:-exercise}
-      - DB_PW=${DB_PW:-exercise}
-      - DB_NAME=${DB_NAME:-exercise}
-      - API_PORT=${API_PORT:-5000}
-      - GRADER_PORT=${GRADER_PORT:-9001}
-      - RABBITMQ_PORT=${RABBITMQ_PORT:-5672}
-      - RABBITMQ_HOST=${RABBITMQ_HOST:-exercise_rabbitmq}
-      - RABBITMQ_USER=${RABBITMQ_USER:-guest}
-      - RABBITMQ_PW=${RABBITMQ_PW:-guest}
-    container_name: exercise_api
-    depends_on:
-      - db
-      - rabbitmq
-      - grader
-    ports:
-      - '5000:5000'
+  rabbitmq:
+    container_name: exercise_rabbitmq
+    build: ./rabbitmq
     networks:
-      - db
       - rabbitmq
-      - grading
+    ports:
+      - '15672:15672'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://rabbitmq:15672"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      db:
+        condition: service_healthy
 
   db:
     container_name: exercise_db
@@ -66,15 +80,11 @@ services:
       - /var/lib/postgresql/data/:/data/db
     ports:
       - '5432:5432'
-  
-  rabbitmq:
-    container_name: exercise_rabbitmq
-    image: rabbitmq:3.11-management
-    networks:
-      - rabbitmq
-    ports:
-      - '15672:15672'
-      - '5672:5672'
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DB_USER:-exercise}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   db-data:
