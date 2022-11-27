@@ -51,16 +51,5 @@ exerciseRouter.delete('/:id', async (req: Request, res: Response) => {
   }
 });
 
-// exerciseRouter.put('/:id', async (req: Request, res: Response) => {
-//   try {
-//     const newUrl = updateUrl(req.body.longUrl, req.params.id);
-//     res.status(204).send(newUrl);
-//   }
-//   catch (error) {
-//     console.log(`Error updating url with short url ${req.params.id}: ${error}`);
-//     res.sendStatus(400);
-//   }
-// });
-
 
 export default exerciseRouter;

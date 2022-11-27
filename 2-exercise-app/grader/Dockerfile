@@ -15,8 +15,4 @@ RUN npm run build-ts
 EXPOSE 9001
 
 # Sleep to wait for docker to start
-ENTRYPOINT dockerd-entrypoint.sh & sleep 5 && exec npm start
-
-# ENTRYPOINT ["dockerd-entrypoint.sh", "&"] 
-# CMD ["sleep", "5", "&&", "exec", "npm", "start"]
-# CMD dockerd-entrypoint.sh </dev/null &>/dev/null & sleep 5 && npm star
+ENTRYPOINT dockerd-entrypoint.sh </dev/null &>/dev/null & sleep 10 && exec npm start

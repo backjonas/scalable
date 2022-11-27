@@ -60,7 +60,6 @@ submissionRouter.post('/', async (req: Request, res: Response) => {
     } else {
       res.sendStatus(403);
     }
-    console.log({ ...req.body, user: req.get('authorization') });
   } catch (error) {
     console.log(`Error creating submission: ${error}`);
     res.sendStatus(400);

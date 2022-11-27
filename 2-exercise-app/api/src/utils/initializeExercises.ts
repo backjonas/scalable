@@ -77,7 +77,7 @@ export const createExercises = async () => {
   exercices.forEach(async exercise => {
     const existingExercise = await getExerciseByContent(exercise);
     if (existingExercise.length === 0) {
-      console.log(await createExercise(exercise));
+      await createExercise(exercise);
     }
   });
 };

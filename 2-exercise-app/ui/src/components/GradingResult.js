@@ -16,10 +16,8 @@ const GradingResult = ({ exerciseId }) => {
     if (ws.data) {
       const { message } = ws.data
       const user = window.localStorage.getItem('exerciseUser');
-      if (message.completed === undefined || !user 
-         || user !== message.user || message.exerciseId !== parseInt(exerciseId)) {
-          return
-         } 
+      if (message.completed === undefined || !user || user !== message.user || 
+          message.exerciseId !== parseInt(exerciseId)) return
       const gradingResult = message.completed ?
         'Your solution is correct' :
         'Your solution is incorrect'

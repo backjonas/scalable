@@ -30,9 +30,6 @@ const Exercise = () => {
       : 'You have not completed this exercise'
     }
     </div>
-    <div>
-    {`You have submitted this exercise ${exercise.numSubmissions} times`}
-    </div>
     <p/>
     <div>{exercise.description}</div>
     <p/>
