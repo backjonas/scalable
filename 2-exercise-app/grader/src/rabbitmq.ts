@@ -8,7 +8,8 @@ const connect = async () => {
   try {
     const RABBITMQ_USER = process.env.RABBITMQ_USER || 'guest';
     const RABBITMQ_PW = process.env.RABBITMQ_PW || 'guest';
-    const amqpServer = `amqp://${RABBITMQ_USER}:${RABBITMQ_PW}@rabbitmq:5672`;
+    const RABBITMQ_HOST = process.env.RABBITMQ_HOST || 'localhost';
+    const amqpServer = `amqp://${RABBITMQ_USER}:${RABBITMQ_PW}@${RABBITMQ_HOST}:5672`;
     connection = await amqplib.connect(amqpServer);
     channel = await connection.createChannel();
     await channel.assertQueue('gradingResponse');
@@ -23,8 +24,6 @@ const listen = async () => {
   try {
     await channel.consume('gradingRequest', async (data) => {
       const receivedData = JSON.parse(data.content);
-      console.log('Received message');
-      console.log(receivedData);
       const submittedCode = receivedData.submittedCode;
 
       const result = await grade(submittedCode);
@@ -35,7 +34,6 @@ const listen = async () => {
         completed
       };
       await send(newSubmission);
-      console.log('Message sent');
       channel.ack(data!);
 
     });

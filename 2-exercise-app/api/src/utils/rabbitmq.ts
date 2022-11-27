@@ -1,7 +1,7 @@
 import amqplib, { Channel, Connection } from 'amqplib';
 
 import { createSubmission } from '../entity/Submission';
-import wss from './websocket';
+import { wss, webSockets } from './websocket';
 
 let channel: Channel, connection: Connection;
 
@@ -9,7 +9,8 @@ const connect = async () => {
   try {
     const RABBITMQ_USER = process.env.RABBITMQ_USER || 'guest';
     const RABBITMQ_PW = process.env.RABBITMQ_PW || 'guest';
-    const amqpServer = `amqp://${RABBITMQ_USER}:${RABBITMQ_PW}@rabbitmq:5672`;
+    const RABBITMQ_HOST = process.env.RABBITMQ_HOST || 'localhost';
+    const amqpServer = `amqp://${RABBITMQ_USER}:${RABBITMQ_PW}@${RABBITMQ_HOST}:5672`;
     connection = await amqplib.connect(amqpServer);
     channel = await connection.createChannel();
     await channel.assertQueue('gradingRequest', { durable: true });
@@ -23,16 +24,11 @@ const listen = async () => {
   try {
     await channel.consume('gradingResponse', async (data) => {
       const receivedData = JSON.parse(data.content);
-      console.log('Received message');
-      console.log(receivedData);
       const result = await createSubmission(receivedData);
-      console.log(result);
       channel.ack(data!);
-      wss.clients.forEach((client) => {
-        console.log('client');
-        console.log(client.user);
-        client.send(JSON.stringify(result));
-      });
+      if (result.user && webSockets[result.user]) {
+        webSockets[result.user].send(JSON.stringify(result));
+      }
     });
   } catch (error) {
     console.log(error);

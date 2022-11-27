@@ -7,20 +7,17 @@ import { setGradingResult } from '../reducers/gradingResultReducer';
 
 const GradingResult = ({ exerciseId }) => {
   const dispatch = useDispatch()
+  const user = window.localStorage.getItem('exerciseUser')
   const ws = useWebSocket({
-    socketUrl: 'ws://localhost:5000'
+    socketUrl: `ws://localhost:5000/?user=${user}&exerciseId=${exerciseId}`
   });
 
   useEffect(() => {
     if (ws.data) {
-      console.log('ws.data', ws.data)
       const { message } = ws.data
       const user = window.localStorage.getItem('exerciseUser');
-      console.log(user)
-      console.log(message.user);
       if (message.completed === undefined || !user 
          || user !== message.user || message.exerciseId !== parseInt(exerciseId)) {
-          console.log('huä')
           return
          } 
       const gradingResult = message.completed ?

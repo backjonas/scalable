@@ -1,6 +1,9 @@
 import { Server } from 'ws';
+import querystring from 'query-string';
 
-const wss = new Server({ noServer: true });
+
+export const wss = new Server({ noServer: true });
+export const webSockets = [];
 
 export const setupWebSocket = (server) => {
   server.on('upgrade', (request, socket, head) => {
@@ -16,19 +19,21 @@ export const setupWebSocket = (server) => {
     }
   });
 
-  wss.on('connection', (ctx) => {
-    console.log('connected', wss.clients.size);
-    ctx.on('message', (message) => {
-      console.log(`Received message ${message}`);
-      ctx.send(`You sent ${message}`);
+  wss.on('connection', (webSocket, req) => {
+    const splitUrl = req.url.split('?');
+    if (splitUrl.length > 1) {
+      const urlParams = querystring.parse(splitUrl[1]);
+      webSockets[urlParams.user.toString()] = webSocket;
+    }
+    webSocket.on('message', (message) => {
+      webSocket.send(`You sent ${message}`);
     });
 
-    ctx.on('close', () => {
+    webSocket.on('close', () => {
       console.log('closed', wss.clients.size);
     });
 
-    ctx.send('connection established');
+    webSocket.send('connection established');
   });
 };
 
-export default wss;
