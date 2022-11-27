@@ -46,6 +46,14 @@ The application uses a postgres database, which the user-facing app communicates
 ### Lighthouse performance results
 
 Main page performance score, desktop: 100
+
 Main page performance score, mobile: 99 
+
 Exercise page performance score, desktop: 100
+
 Exercise page performance score, mobile: 96 
+
+Over 90% of the page load time is spent with scripting & system, which is to be expected from a javascript-based react app.
+
+To further improve the application performance grading processes could be allowed to be run in parallel, as only one process runs at once now.
+Additionally, implementing a cache for submissions could improve the performance, but the real world impact of such a cache might not be very noticable, as even simple code tends to be very different. For usability, the UI would obviously need CSS to improve the experience, as well as markdown rendering for handouts and code highlighting for the user code.
