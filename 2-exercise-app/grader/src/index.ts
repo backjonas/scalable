@@ -2,7 +2,7 @@ import 'dotenv/config';
 import http from 'http';
 import rabbitMQ from './rabbitmq';
 import express from 'express';
-
+import { buildGradingContainer } from './grade';
 
 const startServer = async () => {
   const app = express();

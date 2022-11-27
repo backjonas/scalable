@@ -9,7 +9,7 @@ let channel: Channel, connection: Connection;
 const connect = async () => {
   try {
     // rabbitmq default port is 5672
-    const amqpServer = 'amqp://localhost:5672';
+    const amqpServer = 'amqp://rabbitmq:5672';
     connection = await amqplib.connect(amqpServer);
     channel = await connection.createChannel();
     await channel.assertQueue('gradingRequest', { durable: true });

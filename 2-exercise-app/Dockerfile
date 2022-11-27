@@ -1,7 +1,7 @@
-FROM node:14-alpine
+FROM node:19-alpine
 
 WORKDIR /opt/app
-COPY ui ./ui
+COPY ui/ ./ui
 COPY api/ ./api
 
 WORKDIR /opt/app/api
