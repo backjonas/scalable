@@ -1,0 +1,5 @@
+GET http://localhost:5000/api/reply/3
+
+###
+
+GET http://localhost:5000/api/reply/post/3

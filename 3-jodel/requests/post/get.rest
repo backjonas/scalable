@@ -1,0 +1,5 @@
+GET http://localhost:5000/api/post
+
+###
+
+GET http://localhost:5000/api/post/1

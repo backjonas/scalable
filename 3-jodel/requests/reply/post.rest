@@ -1,0 +1,8 @@
+POST http://localhost:5000/api/reply
+Content-Type: application/json
+Authorization: bearer SomeUserToken
+
+{
+  "content": "Post contenT",
+  "postId": 3
+}
