@@ -1,11 +1,14 @@
 FROM node:19-alpine
 
-WORKDIR /opt/app
-COPY ui/ ./ui
-COPY api/ ./api
+WORKDIR /opt/app/ui
+COPY ui/ .
+RUN rm -rf build
+RUN npm install
+RUN npm run build
 
 WORKDIR /opt/app/api
-RUN npm run build:ui
+COPY api/ .
+RUN cp -r ../ui/build .
 RUN npm install
 RUN npm run build-ts
 

@@ -6,7 +6,7 @@ services:
     build: .
     restart: always
     environment:
-      - DB_HOST=${DB_HOST:-jodel_db}
+      - JODEL_DB_RW_SERVICE_HOST=${DB_HOST:-jodel_db}
       - DB_USER=${DB_USER:-jodel}
       - DB_PW=${DB_PW:-jodel}
       - DB_NAME=${DB_NAME:-jodel}
