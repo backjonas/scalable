@@ -1,0 +1,42 @@
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { initializeOnePost } from '../reducers/postReducer'; 
+import ReplyForm from '../components/ReplyForm';
+import ReplyList from '../components/ReplyList';
+
+
+const PostPage = () => {
+  const postId = useParams().id;
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(initializeOnePost(postId))
+  }, [dispatch, postId])
+
+  const post = useSelector((state) => state.posts.currentPost)
+  const style = {
+    border: 'solid',
+    padding: 10,
+    borderWidth: 1
+  }
+
+  return (
+    <>
+    <a href='/'>
+      <h4 className="nav-header">
+        Back to mainpage
+      </h4>
+    </a>
+    <h2>Post</h2>
+    <p/>
+    <div style = {style}>{post.content}</div>
+    <p/>
+    <ReplyList replies={post.replies}/>
+    <ReplyForm postId={post.id}/>
+    </>
+  )
+}
+
+export default PostPage;

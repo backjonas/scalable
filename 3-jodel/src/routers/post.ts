@@ -35,7 +35,7 @@ postRouter.post('/', async (req: Request, res: Response) => {
     if (userToken && userToken.toLowerCase().startsWith('bearer ')) {
       const newPost = { ...req.body, user: userToken.substring(7) } as IPost;
       const post = await createPost(newPost);
-      res.status(201).send({ post });
+      res.status(201).send(post);
     } else {
       res.sendStatus(403);
     }

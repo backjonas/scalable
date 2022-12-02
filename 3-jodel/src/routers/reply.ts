@@ -35,7 +35,7 @@ replyRouter.post('/', async (req: Request, res: Response) => {
     if (userToken && userToken.toLowerCase().startsWith('bearer ')) {
       const newReply = { ...req.body, user: userToken.substring(7) } as IReply;
       const reply = await createReply(newReply);
-      res.status(201).send({ reply });
+      res.status(201).send(reply);
     } else {
       res.sendStatus(403);
     }

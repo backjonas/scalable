@@ -37,7 +37,7 @@ export const createPost = async (post: IPost) => {
 
 export const getPost = async (id: string) => {
   const repo = getRepository(Post);
-  return await repo.findOne(id);
+  return await repo.findOne(id, { relations: ['replies'] });
 };
 
 export const deletePost = async (id: string) => {
@@ -52,5 +52,8 @@ export const getAllPosts = async () => {
 
 export const getPostsByUser = async (userId: string) => {
   const repo = getRepository(Post);
-  return await repo.find({ where: { user: userId } });
+  return await repo.find({
+    relations: ['replies'],
+    where: { user: userId }
+  });
 };
