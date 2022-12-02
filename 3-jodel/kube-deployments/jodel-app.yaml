@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bitlyapi-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: bitlyapi-app
+  template:
+    metadata:
+      labels:
+        app: bitlyapi-app
+    spec:
+      containers:
+        - name: bitlyapi-app
+          image: bitlyapi:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
