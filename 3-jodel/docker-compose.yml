@@ -1,8 +1,8 @@
 version: '3.5'
 
 services:
-  jodel_api:
-    container_name: jodel_api
+  jodel-api:
+    container_name: jodel-api
     build: ./api
     restart: always
     environment:
@@ -19,12 +19,12 @@ services:
       - db
       - api
   ui:
-    container_name: jodel_ui
+    container_name: jodel-ui
     build: ./ui
     restart: always
     depends_on:
       - db
-      - jodel_api
+      - jodel-api
     ports:
       - '3000:3000'
     networks:

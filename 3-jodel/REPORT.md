@@ -33,7 +33,7 @@ The app requires a running database and a secret containing database credentials
 
 The jodel-api & jodel-ui images can be built with
 ```
-minikube image build -t jodel-api api && minikube image build -t jodel-ui ui --build-env GATSBY_API_HOST=jodel-api GATSBY_API_PORT=5000
+minikube image build -t jodel-api api && minikube image build -t jodel-ui ui
 ```
 
 A running metrics server is required for the autoscaling feature. Such a server can be enabled in minikube with 

@@ -15,4 +15,6 @@ RUN rm -rf ./*
 
 COPY --from=builder /opt/app/public .
 
+COPY ./nginx.conf /etc/nginx/
+
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
