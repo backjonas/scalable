@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: init-db
+spec:
+  template:
+    metadata:
+      name: init-db
+      labels:
+        app: init-db
+    spec:
+      containers:
+      - image: "docker.io/bitnami/postgresql:11.5.0-debian-9-r60"
+        name: init-db
+        command: [
+          bin/sh, -c, 
+          echo "SELECT 'CREATE DATABASE jodel' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'jodel')\gexec" | psql -h $JODEL_DB_RW_SERVICE_HOST -U $DB_USER]
+        env:
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: jodel-db-secret
+              key: username
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: jodel-db-secret
+              key: password
+      restartPolicy: OnFailure

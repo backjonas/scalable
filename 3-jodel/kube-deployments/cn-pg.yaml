@@ -1,18 +1,20 @@
-# Example of PostgreSQL cluster
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: jodel-db
 spec:
   instances: 3
-
-  # Example of rolling update strategy:
-  # - unsupervised: automated update of the primary once all
-  #                 replicas have been upgraded (default)
-  # - supervised: requires manual supervision to perform
-  #               the switchover of the primary
   primaryUpdateStrategy: unsupervised
-
-  # Require 1Gi of space
   storage:
     size: 1Gi
+  superuserSecret:
+    name: jodel-db-secret
+  # postgresql:
+    # pg_hba:
+    #   - host jodel jodel all md5
+  # bootstrap:
+  #   initdb:
+  #     database: jodel
+  #     owner: jodel
+  #     secret:
+  #       name: jodel-db-secret
