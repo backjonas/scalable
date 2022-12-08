@@ -1,13 +1,18 @@
-FROM node:19-alpine
+FROM node:19-alpine AS builder
 
 WORKDIR /opt/app
 COPY . .
-ENV GATSBY_API_HOST=$GATSBY_API_HOST
-ENV GATSBY_API_PORT=$GATSBY_API_PORT
-# RUN echo -e GATSBY_API_HOST=$GATSBY_API_HOST"\n"GATSBY_API_PORT=$GATSBY_API_PORT > .env
+ENV GATSBY_DOCKER='true'
+
 RUN npm install
 RUN npm run build
 
-EXPOSE 3000
 
-CMD npm run serve
+FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
+
+RUN rm -rf ./*
+
+COPY --from=builder /opt/app/public .
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

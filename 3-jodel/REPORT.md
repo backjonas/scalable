@@ -23,18 +23,17 @@ kubectl apply -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg
 ```
 
 Now, a database can be deployed with
-
-Note that this deployment includes a placeholder secret for database credentials (postgres:postgres). To create a proper secret, omit `db-secret.yaml` below and create a secret with the name `jodel-db-secret` that has the username `postgres` and some password
 ```
 kubectl apply -f kube-deployments/db-secret.yaml -f kube-deployments/cn-pg.yaml
 ```
+Note that this deployment includes a placeholder secret for database credentials (postgres:postgres). To create a proper secret, omit `db-secret.yaml` below and create a secret with the name `jodel-db-secret` that has the username `postgres` and some password
 
 ### Deploying the app
 The app requires a running database and a secret containing database credentials as described above.
 
-The jodel-app image can be built with
+The jodel-api & jodel-ui images can be built with
 ```
-minikube image build -t jodel-app .
+minikube image build -t jodel-api api && minikube image build -t jodel-ui ui --build-env GATSBY_API_HOST=jodel-api GATSBY_API_PORT=5000
 ```
 
 A running metrics server is required for the autoscaling feature. Such a server can be enabled in minikube with 
@@ -47,12 +46,12 @@ After the database has been started, a database can be created for the applicati
 kubectl apply -f kube-deployments/create-database.yaml
 ```
 
-The application and a HorizontalPodAutoscaler can be deployed with
+The api & ui with corresponding HorizontalPodAutoscalers can be deployed with
 ```
-kubectl apply -f kube-deployments/jodel-app.yaml -f kube-deployments/app-hpa.yaml -f kube-deployments/app-service.yaml
+kubectl apply -f kube-deployments/jodel-api.yaml -f kube-deployments/api-hpa.yaml -f kube-deployments/api-service.yaml -f kube-deployments/jodel-ui.yaml -f kube-deployments/ui-hpa.yaml -f kube-deployments/ui-service.yaml
 ```
 
-Verify the hpa is working correctly, e.g. with `kubcetl get hpa -w`
+Verify the hpas are working correctly, e.g. with `kubcetl get hpa -w`
 
 If you see a TARGET of \<unknown\>/50%, the HPA is **not** working correctly. 
 
@@ -67,7 +66,7 @@ And in a separate terminal, run
 ```
 kubectl get svc
 ```
-to find the external ip for the app. The application can be found at `<EXTERNAL-IP>:5000`
+to find the external ip for the ui. The application ui can be found at `<EXTERNAL-IP>:3000`
 
 ## Running the performance tests
 ### Prerequisites
@@ -75,12 +74,14 @@ to find the external ip for the app. The application can be found at `<EXTERNAL-
 
 Performance test scripts can be found in the `k6scripts` directory.
 
-They require a running application to function, and additionally they require changing the `externalIP` variable in each test (see *Accessing the application* above).
+They require a running application to function, and additionally they require changing the `externalIP` variable in each test (see *Accessing the application* above). For the POST tests, this variable should be the external IP of the jodel-api, and for the GET tests this should be the external IP of the jodel-ui.
 
 The tests can be run with
 ```
 k6 run test_name.js
 ```
+
+For testing the scaling of the application, 
 
 
 ## Application structure

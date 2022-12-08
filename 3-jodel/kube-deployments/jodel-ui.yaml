@@ -1,20 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jodel-app
+  name: jodel-ui
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: jodel-app
+      app: jodel
+      tier: ui
   template:
     metadata:
       labels:
-        app: jodel-app
+        app: jodel
+        tier: ui
     spec:
       containers:
-        - name: jodel-app-container
-          image: jodel-app:latest
+        - name: jodel-ui
+          image: jodel-ui:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 5000

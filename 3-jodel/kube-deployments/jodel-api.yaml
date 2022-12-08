@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jodel-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jodel
+      tier: api
+  template:
+    metadata:
+      labels:
+        app: jodel
+        tier: api
+    spec:
+      containers:
+        - name: jodel-api
+          image: jodel-api:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+          resources:
+            limits:
+              cpu: 1000m
+            requests:
+              cpu: 500m
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: jodel-db-secret
+                  key: username
+            - name: DB_PW
+              valueFrom:
+                secretKeyRef:
+                  name: jodel-db-secret
+                  key: password
+            - name: DB_NAME
+              value: "jodel"
+            - name: API_PORT
+              value: "5000"
+      restartPolicy: Always

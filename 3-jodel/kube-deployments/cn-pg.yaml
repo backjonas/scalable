@@ -9,12 +9,3 @@ spec:
     size: 1Gi
   superuserSecret:
     name: jodel-db-secret
-  # postgresql:
-    # pg_hba:
-    #   - host jodel jodel all md5
-  # bootstrap:
-  #   initdb:
-  #     database: jodel
-  #     owner: jodel
-  #     secret:
-  #       name: jodel-db-secret
