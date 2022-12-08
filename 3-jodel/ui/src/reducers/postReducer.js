@@ -25,14 +25,7 @@ const postSlice = createSlice({
       }
     },
     appendReply(state, action) {
-      return {
-        ...state,
-        currentPost: {
-          ...state.currentPost,
-          replies: [action.payload, ...state.currentPost.replies]
-        }
-      }
-    }
+      state.currentPost.replies.push(action.payload)    }
   }
 })
 

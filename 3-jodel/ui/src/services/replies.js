@@ -2,7 +2,8 @@ import axios from 'axios'
 
 let token = null
 
-const baseUrl = '/api/reply'
+const api_url = 'localhost:5000'
+const baseUrl = `http://${api_url}/api/reply`
 
 const setToken = (newToken) => {
   token = `bearer ${newToken}`

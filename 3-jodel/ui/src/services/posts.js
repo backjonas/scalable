@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 let token = null
-
-const baseUrl = '/api/post'
+const api_url = 'localhost:5000'
+const baseUrl = `http://${api_url}/api/post`
 
 const setToken = (newToken) => {
   token = `bearer ${newToken}`

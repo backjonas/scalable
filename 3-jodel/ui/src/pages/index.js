@@ -1,16 +1,19 @@
-import { useEffect } from 'react'
+import React, { useEffect } from "react"
 import { useDispatch } from 'react-redux'
-
+import { initializeUser } from '../utils/initializeUser'
 import PostList from '../components/PostList'
 import PostForm from '../components/PostForm'
 import { initializeAllPosts } from '../reducers/postReducer'; 
 
-const Mainpage = () => {
+
+const Home = () => {
+  initializeUser()
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(initializeAllPosts())
   }, [dispatch])
+
   return (
     <>
     <div className='center-page'>
@@ -22,4 +25,4 @@ const Mainpage = () => {
   )
 }
 
-export default Mainpage;
+export default Home

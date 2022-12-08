@@ -1,14 +1,15 @@
-import { useParams } from 'react-router-dom';
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { initializeOnePost } from '../reducers/postReducer'; 
-import ReplyForm from '../components/ReplyForm';
-import ReplyList from '../components/ReplyList';
+import { initializeOnePost } from '../../reducers/postReducer'; 
+import { initializeUser } from '../../utils/initializeUser'
+import ReplyForm from '../../components/ReplyForm';
+import ReplyList from '../../components/ReplyList';
 
 
-const PostPage = () => {
-  const postId = useParams().id;
+const PostPage = (props) => {
+  initializeUser();
+  const postId = props.params.id;
   const dispatch = useDispatch()
 
   useEffect(() => {
