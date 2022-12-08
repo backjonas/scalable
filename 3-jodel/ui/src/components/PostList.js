@@ -11,11 +11,12 @@ const PostList = () => {
   return(
     <ul>
       <div>
-           {posts.map(post =>
+        {posts.map(post =>
           <div key={post.id} style={style}>
             <div>
               <div>{post.content}</div>
-              <div>Post time: {post.timestamp}</div>
+              <p/>
+              <div>Time posted: {post.timestamp}</div>
               <a href={`/post/${post.id}`}>View post</a>
             </div>
           </div>

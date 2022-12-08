@@ -1,6 +1,6 @@
-# Project 2 - Exercise submission service
+# Project 3 - Jodel app
 
-## Running the applications
+## Running the application in docker
 ### Prerequisites 
 * docker
 * docker-compose
@@ -10,21 +10,77 @@ The application can be started by running
 docker-compose up --build
 ```
 
-The application is tested to work with native Ubuntu as well as Ubuntu in WSL2. The docker-in-docker solution used by the grader service is somewhat inconsistent (on WSL2 atleast). The problem seemed to get fixed most of the time by just recreating the container.
+## Deploying with kubernetes
+The guidelines listed below assume minikube is used. Other options should naturally work with slight modifications.
+### Prerequisites
+* minikube
+* kubectl
+
+### Deploying the database
+The application is configured to use `cloudnative-pg`. The database controller will have to first be enabled with
+```
+kubectl apply -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.18/releases/cnpg-1.18.0.yaml
+```
+
+Now, a database can be deployed with
+
+Note that this deployment includes a placeholder secret for database credentials (postgres:postgres). To create a proper secret, omit `db-secret.yaml` below and create a secret with the name `jodel-db-secret` that has the username `postgres` and some password
+```
+kubectl apply -f kube-deployments/db-secret.yaml -f kube-deployments/cn-pg.yaml
+```
+
+### Deploying the app
+The app requires a running database and a secret containing database credentials as described above.
+
+The jodel-app image can be built with
+```
+minikube image build -t jodel-app .
+```
+
+A running metrics server is required for the autoscaling feature. Such a server can be enabled in minikube with 
+```
+minikube addons enable metrics-server
+```
+
+After the database has been started, a database can be created for the application with
+```
+kubectl apply -f kube-deployments/create-database.yaml
+```
+
+The application and a HorizontalPodAutoscaler can be deployed with
+```
+kubectl apply -f kube-deployments/jodel-app.yaml -f kube-deployments/app-hpa.yaml -f kube-deployments/app-service.yaml
+```
+
+Verify the hpa is working correctly, e.g. with `kubcetl get hpa -w`
+
+If you see a TARGET of \<unknown\>/50%, the HPA is **not** working correctly. 
+
+When testing locally, it was often necessary to wait some time (up to a couple minutes) to get the cpu measurements working.
+
+#### Accessing the application
+To access the application, run
+```
+minikube tunnel
+```
+And in a separate terminal, run
+```
+kubectl get svc
+```
+to find the external ip for the app. The application can be found at `<EXTERNAL-IP>:5000`
 
 ## Running the performance tests
 ### Prerequisites
 * k6
 
 Performance test scripts can be found in the `k6scripts` directory.
-They require an application running at localhost:5000 to function (see *Running the applications* above).
+
+They require a running application to function, and additionally they require changing the `externalIP` variable in each test (see *Accessing the application* above).
 
 The tests can be run with
 ```
 k6 run test_name.js
 ```
-
-Please note that running the POST test fills up rabbitMQ with around 1000 messages each second. These can be cleared e.g. by logging into the rabbitMQ console at `localhost:15672` (default credentials are exercise:exercise)
 
 
 ## Application structure
@@ -37,13 +93,14 @@ The application uses a postgres database, which the user-facing app communicates
 ## Performance test results
 
 ### K6
-| Method                | Avg req/s | Median HTTP req | p(95) HTTP req | p(99) HTTP req |
-| --------------------- | --------- | --------------- | -------------- | -------------- |
-| GET /                 | 5141.02/s | 1.77ms          | 2.84ms         | 4.15ms         |
-| GET /exercise/:id     | 3903.54/s | 2.26ms          | 3.97ms         | 5.93ms         |
-| POST /api/submission  | 3245.76/s | 2.63ms          | 5.51ms         | 7.23ms         |
+| Method          | Avg req/s | Median HTTP req | p(95) HTTP req | p(99) HTTP req |
+| --------------- | --------- | --------------- | -------------- | -------------- |
+| GET /           | 5141.02/s | 1.77ms          | 2.84ms         | 4.15ms         |
+| GET /post/:id   | 3903.54/s | 2.26ms          | 3.97ms         | 5.93ms         |
+| POST /api/post  | 3245.76/s | 2.63ms          | 5.51ms         | 7.23ms         |
+| POST /api/reply | 3245.76/s | 2.63ms          | 5.51ms         | 7.23ms         |
 
-### Lighthouse performance results
+### Lighthouse core web vitals
 
 Main page performance score, desktop: 100
 

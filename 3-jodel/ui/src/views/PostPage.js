@@ -31,7 +31,11 @@ const PostPage = () => {
     </a>
     <h2>Post</h2>
     <p/>
-    <div style = {style}>{post.content}</div>
+    <div style = {style}>
+      <div>{post.content}</div>
+      <p/>
+      <div>Time posted: {post.timestamp}</div>
+    </div>
     <p/>
     <ReplyList replies={post.replies}/>
     <ReplyForm postId={post.id}/>

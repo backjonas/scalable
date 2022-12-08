@@ -13,7 +13,8 @@ const ReplyList = ({ replies }) => {
         {replies.map(reply =>
           <div key={reply.id} style={style}>
             <div>{reply.content}</div>
-            <div>post time: {reply.timestamp}</div>
+            <p/>
+            <div>Time posted: {reply.timestamp}</div>
           </div>
         )}
       </div>

@@ -19,10 +19,19 @@ const postSlice = createSlice({
       return { ...state, currentPost: action.payload }
     },
     appendPost(state, action) {
-      state.allPosts.push(action.payload)
+      return { 
+        ...state,
+        allPosts: [action.payload, ...state.allPosts].slice(0, 20)
+      }
     },
     appendReply(state, action) {
-      state.currentPost.replies.push(action.payload)
+      return {
+        ...state,
+        currentPost: {
+          ...state.currentPost,
+          replies: [action.payload, ...state.currentPost.replies]
+        }
+      }
     }
   }
 })
@@ -32,8 +41,9 @@ export const { setPosts, setCurrentPost, appendPost, appendReply } = postSlice.a
 export const initializeAllPosts = () => {
   return async dispatch => {
     const posts = await postService.getAll();
-    dispatch(setPosts(posts.sort(
-      (x, y) => new Date(x.timestamp) - new Date(y.timestamp)))
+    dispatch(setPosts(posts
+      .sort((x, y) => new Date(y.timestamp) - new Date(x.timestamp))
+      .slice(0, 20))
     )
   }
 }
