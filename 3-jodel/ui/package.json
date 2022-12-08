@@ -1,5 +1,5 @@
 {
-  "name": "bitly-frontend",
+  "name": "jodel-ui",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -20,7 +20,7 @@
   "scripts": {
     "dev": "gatsby develop -p 3000 -o",
     "build": "gatsby build",
-    "serve": "gatsby serve -p 3000"
+    "serve": "gatsby serve -p 3000 -H 0.0.0.0"
   },
   "eslintConfig": {
     "extends": [

@@ -1,9 +1,9 @@
 version: '3.5'
 
 services:
-  app:
-    container_name: jodel_app
-    build: .
+  api:
+    container_name: jodel_api
+    build: ./api
     restart: always
     environment:
       - JODEL_DB_RW_SERVICE_HOST=${DB_HOST:-jodel_db}
@@ -17,7 +17,22 @@ services:
       - '5000:5000'
     networks:
       - db
-
+      - api
+  ui:
+    container_name: jodel_ui
+    build: ./ui
+    restart: always
+    environment:
+      - GATSBY_API_PORT=${API_PORT:-5000}
+      - GATSBY_API_HOST=${API_HOST:-api}
+    depends_on:
+      - db
+      - api
+    ports:
+      - '3000:3000'
+    networks:
+      - db
+      - api
   db:
     container_name: jodel_db
     image: postgres:14-alpine
@@ -43,5 +58,7 @@ volumes:
 
 networks:
   db:
+    driver: bridge
+  api:
     driver: bridge
 

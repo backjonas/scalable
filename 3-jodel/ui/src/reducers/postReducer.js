@@ -58,7 +58,6 @@ export const createPost = (content) => {
 export const createReply = (content, postId) => {
   return async dispatch => {
     const reply = await replyService.createNew(content, postId)
-    console.log(reply)
     dispatch(appendReply(reply))
   }
 }

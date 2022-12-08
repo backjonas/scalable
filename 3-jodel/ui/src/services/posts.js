@@ -1,8 +1,9 @@
 import axios from 'axios'
 
 let token = null
-const api_url = 'localhost:5000'
-const baseUrl = `http://${api_url}/api/post`
+const api_host = process.env.GATSBY_API_HOST || 'localhost'
+const api_port = process.env.GATSBY_API_PORT || '5000'
+const baseUrl = `http://${api_host}:${api_port}/api/post`
 
 const setToken = (newToken) => {
   token = `bearer ${newToken}`
