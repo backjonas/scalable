@@ -22,5 +22,5 @@ export const options = {
 };
 
 export default () => {
-  http.get(`http://${externalIP}:3000/post/1`);
+  http.get(`http://${externalIP}:3000/api/post/1`);
 }

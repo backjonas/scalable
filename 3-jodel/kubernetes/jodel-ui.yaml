@@ -22,22 +22,7 @@ spec:
             - containerPort: 5000
           resources:
             limits:
-              cpu: 1000m
-            requests:
               cpu: 500m
-          env:
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: jodel-db-secret
-                  key: username
-            - name: DB_PW
-              valueFrom:
-                secretKeyRef:
-                  name: jodel-db-secret
-                  key: password
-            - name: DB_NAME
-              value: "jodel"
-            - name: API_PORT
-              value: "5000"
+            requests:
+              cpu: 250m
       restartPolicy: Always

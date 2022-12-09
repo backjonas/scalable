@@ -1,7 +1,7 @@
 import http from 'k6/http';
 
 // Change this variable to the external IP returned by kubectl get svc
-const externalIP = '10.108.199.249'
+const externalIP = '10.101.144.70'
 
 export const options = {
   duration: '10s',
@@ -10,5 +10,5 @@ export const options = {
 };
 
 export default () => {
-  http.get(`http://${externalIP}:5000`);
+  http.get(`http://${externalIP}:3000`);
 }

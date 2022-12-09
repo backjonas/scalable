@@ -1,7 +1,7 @@
 import http from 'k6/http';
 
 // Change this variable to the external IP returned by kubectl get svc
-const externalIP = '10.108.199.249'
+const externalIP = '10.101.144.70'
 
 export const options = {
   duration: '10s',
@@ -11,7 +11,7 @@ export const options = {
 
 export default () => {
   http.post(
-    `http://${externalIP}:5000/api`, 
+    `http://${externalIP}:3000/api/post`, 
     JSON.stringify({ content: "Nice posts" }), 
     {
       headers: { 
