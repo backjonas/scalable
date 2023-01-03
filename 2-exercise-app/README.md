@@ -1,16 +1,59 @@
-# Walking Skeleton
+# Project 2 - Exercise submission service
 
-The walking skeleton for Course Project Two consists of five services: (1) a frontend responsible for a user interface, (2) a backend responsible for an API, (3) a database server, (4) a flyway image used for setting up the database schema, and (5) an Nginx web server that acts as a reverse proxy.
+## Running the applications
+### Prerequisites 
+* docker
+* docker-compose
 
-When you start the walking skeleton, the Nginx web server is available on the port 7800. Requests to paths starting with `/api` are directed to the backend, while other requests are directed to the frontend.
+The application can be started by running
+```
+docker-compose up --build
+```
+
+The application is tested to work with native Ubuntu as well as Ubuntu in WSL2. The docker-in-docker solution used by the grader service is somewhat inconsistent (on WSL2 atleast). The problem seemed to get fixed most of the time by just recreating the container.
+
+## Running the performance tests
+### Prerequisites
+* k6
+
+Performance test scripts can be found in the `k6scripts` directory.
+They require an application running at localhost:5000 to function (see *Running the applications* above).
+
+The tests can be run with
+```
+k6 run test_name.js
+```
+
+Please note that running the POST test fills up rabbitMQ with around 1000 messages each second. These can be cleared e.g. by logging into the rabbitMQ console at `localhost:15672` (default credentials are exercise:exercise)
 
 
-## Grading Functionality
+## Application structure
+The application consists of one user-facing app consisting of an express api and a react frontend and one app that handles the grading of submissions.
 
-There exists a grader image that can be used for grading submitted programming exercises. This is in folder "grader-image" -- *you need to build it for it to work*. Building it happens either by running the `build.sh` script or by running the command `docker build -t grader-image .` in the "grader-image" folder.
+The communication with the grading service is handled with rabbitMQ, and only one submission is graded at once. The frontend communicates with the API using API routes and websockets.
 
-The grader essentially waits for a while and returns a random result.
+The application uses a postgres database, which the user-facing app communicates with.
 
-The backend server uses the grader image (in `grade.js`) -- in brief, in `grade.js`, submitted code is copied to a new grader container that is then run, after which the result from grading is copied from the container. While the code has been written into a JS file, one could as well create shell scripts for the same purpose.
+## Performance test results
 
-We **strongly** recommend creating a separate service that is responsible for grading of incoming submissions and moving the `grade.js` functionality into that service. In this case, the backend would then submit codes for grading into that service.
+### K6
+| Method                | Avg req/s | Median HTTP req | p(95) HTTP req | p(99) HTTP req |
+| --------------------- | --------- | --------------- | -------------- | -------------- |
+| GET /                 | 5141.02/s | 1.77ms          | 2.84ms         | 4.15ms         |
+| GET /exercise/:id     | 3903.54/s | 2.26ms          | 3.97ms         | 5.93ms         |
+| POST /api/submission  | 3245.76/s | 2.63ms          | 5.51ms         | 7.23ms         |
+
+### Lighthouse performance results
+
+Main page performance score, desktop: 100
+
+Main page performance score, mobile: 99 
+
+Exercise page performance score, desktop: 100
+
+Exercise page performance score, mobile: 96 
+
+Over 90% of the page load time is spent with scripting & system, which is to be expected from a javascript-based react app.
+
+To further improve the application performance grading processes could be allowed to be run in parallel, as only one process runs at once now.
+Additionally, implementing a cache for submissions could improve the performance, but the real world impact of such a cache might not be very noticable, as even simple code tends to be very different. For usability, the UI would obviously need CSS to improve the experience, as well as markdown rendering for handouts and code highlighting for the user code.
